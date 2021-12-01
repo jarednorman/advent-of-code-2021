@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require_relative "./aoc.rb"
+require_relative "../aoc.rb"
 
 raise "Wrong number of arguments: #{ARGV.length}" if ARGV.length != 2
 AoC.new(*ARGV.map(&:to_i)).run
