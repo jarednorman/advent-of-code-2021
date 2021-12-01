@@ -4,8 +4,12 @@ class AoC::Day1Part1
   end
 
   def solution
-    @numbers.each_cons(2).count do |a, b|
+    steps.each_cons(2).count do |a, b|
       a < b
     end
+  end
+
+  def steps
+    @numbers
   end
 end
