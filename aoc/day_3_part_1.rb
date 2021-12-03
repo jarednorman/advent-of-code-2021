@@ -4,22 +4,42 @@ class AoC::Day3Part1
   end
 
   def solution
-    num = ""
+    gamma = ""
+    epsilon = ""
 
-    @input.first.each_with_index do |_, index|
-      ones = @input.count { |x| x[index] == "1" }
-      zeroes = @input.count { |x| x[index] == "0" }
-      
-      if ones > zeroes
-        num += "1"
-      else
-        num += "0"
-      end
+    bit_positions.each do |index|
+      gamma += most_common_digit(index)
+      epsilon += least_common_digit(index)
     end
 
-    gamma = num.to_i(2)
-    epsilon = num.gsub("0", "a").gsub("1", "0").gsub("a", "1").to_i(2)
+    gamma.to_i(2) * epsilon.to_i(2)
+  end
 
-    gamma * epsilon
+  private
+
+  def bit_positions
+    (0...@input.first.length)
+  end
+
+  def most_common_digit(index, input = @input)
+    ones = input.count { |x| x[index] == "1" }
+    zeroes = input.count { |x| x[index] == "0" }
+
+    if ones >= zeroes
+      "1"
+    else
+      "0"
+    end
+  end
+
+  def least_common_digit(index, input = @input)
+    ones = input.count { |x| x[index] == "1" }
+    zeroes = input.count { |x| x[index] == "0" }
+
+    if ones >= zeroes
+      "0"
+    else
+      "1"
+    end
   end
 end
