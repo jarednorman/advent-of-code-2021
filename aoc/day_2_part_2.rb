@@ -2,15 +2,15 @@ class AoC::Day2Part2 < AoC::Day2Part1
   def solution
     @aim = 0
 
-    @instructions.each do |command, argument|
-      case command
+    @instructions.each do |command|
+      case command.name
       when "down"
-        @aim += argument
+        @aim += command.argument
       when "up"
-        @aim -= argument
+        @aim -= command.argument
       when "forward"
-        @position += argument
-        @depth += @aim * argument
+        @position += command.argument
+        @depth += @aim * command.argument
       end
     end
 
