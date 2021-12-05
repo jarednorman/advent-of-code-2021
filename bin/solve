@@ -2,5 +2,25 @@
 
 require_relative "../aoc.rb"
 
+require "fileutils"
+
 raise "Wrong number of arguments: #{ARGV.length}" if ARGV.length != 2
-AoC.new(*ARGV.map(&:to_i)).run
+day = ARGV[0].to_i
+part = ARGV[1].to_i
+
+unless File.exists?(data_file = "data/day#{day}.txt")
+  require "net/http"
+
+  puts "Fetching missing data file #{data_file}"
+
+  uri = URI("https://adventofcode.com/2021/day/#{day}/input")
+  http = Net::HTTP.new(uri.host, 443)
+  http.use_ssl = true
+  request = Net::HTTP::Get.new(uri.request_uri)
+  request['Cookie'] = ENV.fetch('AOC_COOKIE')
+  response = http.request(request)
+
+  File.write(data_file, response.body)
+end
+
+AoC.new(day, part).run
