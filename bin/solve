@@ -20,6 +20,8 @@ unless File.exists?(data_file = "data/day#{day}.txt")
   request['Cookie'] = ENV.fetch('AOC_COOKIE')
   response = http.request(request)
 
+  raise response.body unless response.code == "200"
+
   File.write(data_file, response.body)
 end
 
