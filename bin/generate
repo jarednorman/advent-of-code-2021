@@ -1,0 +1,60 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'bundler/setup'
+
+require 'erb'
+require 'fileutils'
+
+def create_file(path, contents)
+  return if File.exists? path
+
+  File.write(path, contents)
+end
+
+(1..25).each do |n|
+  create_file "aoc/day_#{n}_part_1.rb", <<~TEMPLATE
+    class AoC::Day#{n}Part1
+      def initialize(input = File.read("data/day#{n}.txt"))
+      end
+
+      def solution
+      end
+    end
+  TEMPLATE
+
+  create_file "spec/aoc/day_#{n}_part_1_spec.rb", <<~TEMPLATE
+    require "spec_helper"
+
+    RSpec.describe AoC::Day#{n}Part1 do
+      describe "#solution" do
+        subject { described_class.new(input).solution }
+
+        let(:input) { <<~INPUT }
+        INPUT
+
+        it { is_expected.to eq nil }
+      end
+    end
+  TEMPLATE
+
+  create_file "aoc/day_#{n}_part_2.rb", <<~TEMPLATE
+    class AoC::Day#{n}Part2 < AoC::Day#{n}Part1
+    end
+  TEMPLATE
+
+  create_file "spec/aoc/day_#{n}_part_2_spec.rb", <<~TEMPLATE
+    require "spec_helper"
+
+    RSpec.describe AoC::Day#{n}Part2 do
+      describe "#solution" do
+        subject { described_class.new(input).solution }
+
+        let(:input) { <<~INPUT }
+        INPUT
+
+        it { is_expected.to eq nil }
+      end
+    end
+  TEMPLATE
+end
