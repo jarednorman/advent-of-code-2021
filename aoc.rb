@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'bundler/setup'
 Bundler.require(:default)
-require 'fileutils'
 
 class AoC
   LOADER = Zeitwerk::Loader.new.tap do |loader|
