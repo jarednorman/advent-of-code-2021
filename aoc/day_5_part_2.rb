@@ -1,4 +1,7 @@
 class AoC::Day5Part2 < AoC::Day5Part1
-  def solution
+  private
+
+  def exclude?(_)
+    false
   end
 end
