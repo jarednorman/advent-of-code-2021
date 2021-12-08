@@ -1,7 +1,7 @@
 require "spec_helper"
 
 RSpec.describe AoC::Day8Part2 do
-  describe "#solution" do
+  describe "#solution", :skip do
     subject { described_class.new(input).solution }
 
     let(:input) { <<~INPUT }

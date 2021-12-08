@@ -6,8 +6,14 @@ class AoC::Day7Part1
   def solution
     (@crabs.min..@crabs.max).map { |position|
       @crabs.sum { |crab|
-        (position - crab).abs
+        fuel_cost((position - crab).abs)
       }
     }.min
+  end
+
+  private
+
+  def fuel_cost(n)
+    n
   end
 end
