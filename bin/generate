@@ -23,36 +23,25 @@ end
     end
   TEMPLATE
 
-  create_file "spec/aoc/day_#{n}_part_1_spec.rb", <<~TEMPLATE
-    require "spec_helper"
-
-    RSpec.describe AoC::Day#{n}Part1 do
-      describe "#solution" do
-        subject { described_class.new(input).solution }
-
-        let(:input) { <<~INPUT }
-        INPUT
-
-        it { is_expected.to eq nil }
-      end
-    end
-  TEMPLATE
-
   create_file "aoc/day_#{n}_part_2.rb", <<~TEMPLATE
     class AoC::Day#{n}Part2 < AoC::Day#{n}Part1
     end
   TEMPLATE
 
-  create_file "spec/aoc/day_#{n}_part_2_spec.rb", <<~TEMPLATE
+  create_file "spec/aoc/day_#{n}_spec.rb", <<~TEMPLATE
     require "spec_helper"
 
-    RSpec.describe AoC::Day#{n}Part2 do
-      describe "#solution" do
-        subject { described_class.new(input).solution }
+    RSpec.describe "Day #{n}" do
+      subject { described_class.new(input).solution }
 
-        let(:input) { <<~INPUT }
-        INPUT
+      let(:input) { <<~INPUT }
+      INPUT
 
+      describe AoC::Day#{n}Part1 do
+        it { is_expected.to eq nil }
+      end
+
+      describe AoC::Day#{n}Part2, :skip do
         it { is_expected.to eq nil }
       end
     end
