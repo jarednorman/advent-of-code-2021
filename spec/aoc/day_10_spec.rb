@@ -20,15 +20,25 @@ RSpec.describe "Day 10" do
     it { is_expected.to eq 26397 }
   end
 
-  describe AoC::Day10Part2, :skip do
-    it { is_expected.to eq nil }
+  describe AoC::Day10Part2 do
+    it { is_expected.to eq 288957 }
   end
 
   describe AoC::Day10Part1::Line do
     subject { described_class.new(chars) }
 
+    context "non-corrupted line" do
+      let(:chars) { <<~CHARS.strip.split('') }
+        [({(<(())[]>[[{[]{<()<>>
+      CHARS
+
+      its(:autocomplete_string) { is_expected.to eq "}}]])})]" }
+
+      its(:autocomplete_score) { is_expected.to eq 288957 }
+    end
+
     context "erroneous }" do
-      let(:chars) { <<~CHARS.split('') }
+      let(:chars) { <<~CHARS.strip.split('') }
         {([(<{}[<>[]}>{[]{[(<()>
       CHARS
 
@@ -38,7 +48,7 @@ RSpec.describe "Day 10" do
     end
 
     context "erroneous )" do
-      let(:chars) { <<~CHARS.split('') }
+      let(:chars) { <<~CHARS.strip.split('') }
         [<(<(<(<{}))><([]([]()
       CHARS
 

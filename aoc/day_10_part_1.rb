@@ -23,6 +23,8 @@ class AoC::Day10Part1
           raise "Unexpected char: #{c.inspect}"
         end
       end
+
+      @autocomplete_string = stack.reverse.map { |c| PARENS[c] }.join('')
     end
 
     def corrupted?
@@ -36,6 +38,26 @@ class AoC::Day10Part1
         "}" => 1197,
         ">" => 25137
       }[@bad_char]
+    end
+
+    def autocomplete_string
+      @autocomplete_string
+    end
+
+    def autocomplete_score
+      score = 0
+
+      @autocomplete_string.split('').each do |c|
+        score *= 5
+        score += {
+          ")" => 1,
+          "]" => 2,
+          "}" => 3,
+          ">" => 4
+        }[c]
+      end
+
+      score
     end
   end
 
