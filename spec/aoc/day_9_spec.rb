@@ -9,15 +9,15 @@ RSpec.describe "Day 9" do
     9899965678
   INPUT
 
-  describe "Part 1", :focus do
+  describe "Part 1" do
     subject { AoC::Day9Part1.new(input).solution }
 
     it { is_expected.to eq 15 }
   end
 
   describe "Part 2" do
-    subject { AoC::Day9Part1.new(input).solution }
+    subject { AoC::Day9Part2.new(input).solution }
 
-    it { is_expected.to eq nil }
+    it { is_expected.to eq 1134 }
   end
 end

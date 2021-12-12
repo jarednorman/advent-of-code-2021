@@ -1,4 +1,6 @@
 class AoC::Day9Part1
+  Cell = Struct.new(:value, :x, :y)
+
   class HeightMap
     def initialize(data)
       @data = data
@@ -15,12 +17,14 @@ class AoC::Day9Part1
     def each_cell
       @data.each_with_index { |row, x|
         row.each_with_index { |cell, y|
-          yield cell, x, y
+          yield Cell.new(cell, x, y)
         }
       }
     end
 
-    def neighbours(x, y)
+    def neighbours(cell)
+      x = cell.x
+      y = cell.y
       n = []
 
       n << cell(x - 1, y) if x > 0
@@ -32,7 +36,7 @@ class AoC::Day9Part1
     end
 
     def cell(x, y)
-      @data[x][y]
+      Cell.new @data[x][y], x, y
     end
   end
 
@@ -45,9 +49,9 @@ class AoC::Day9Part1
   def solution
     low_points = []
 
-    @map.each_cell { |cell, x, y|
-      if @map.neighbours(x, y).all? { |z| z > cell }
-        low_points << cell
+    @map.each_cell { |cell|
+      if @map.neighbours(cell).all? { |z| z.value > cell.value }
+        low_points << cell.value
       end
     }
 
