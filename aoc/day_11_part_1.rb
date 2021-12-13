@@ -22,9 +22,10 @@ class AoC::Day11Part1
     end
 
     def reset
+      flashed = @flashed
       @flashed = false
-
       @power = 0 if @power > 9
+      return flashed
     end
   end
 
@@ -44,9 +45,13 @@ class AoC::Day11Part1
         end
       end
 
-      @octopi.flatten.each(&:reset)
+      @all_flashed = @octopi.flatten.map(&:reset).all?
 
       @flashes
+    end
+
+    def all_flashed?
+      @all_flashed
     end
 
     def print
@@ -88,16 +93,8 @@ class AoC::Day11Part1
   end
 
   def solution
-    @grid.print
-
     100.times.sum { |n|
-      result = @grid.step
-
-      if n < 10
-        @grid.print
-      end
-
-      result
+      @grid.step
     }
   end
 end
