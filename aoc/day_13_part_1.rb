@@ -21,6 +21,22 @@ class AoC::Day13Part1
         )
       end
     end
+
+    def print
+      (0..dots.map(&:last).max).each do |y|
+        (0..dots.map(&:first).max).each do |x|
+          STDOUT.print(
+            if dots.include?([x, y])
+              "#"
+            else
+              " "
+            end
+          )
+        end
+
+        STDOUT.print "\n"
+      end
+    end
   end
 
   def initialize(input = File.read("data/day13.txt"))

@@ -31,7 +31,6 @@ RSpec.describe "Day 13" do
     it { is_expected.to eq 17 }
   end
 
-  describe AoC::Day13Part2, :skip do
-    it { is_expected.to eq nil }
+  describe AoC::Day13Part2 do
   end
 end
