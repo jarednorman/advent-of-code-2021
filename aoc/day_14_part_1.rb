@@ -1,33 +1,40 @@
 class AoC::Day14Part1
   class Polymer
     def initialize(template, rules)
-      @template = template.split('')
       @rules = rules
-    end
+      @hash = Hash.new(0)
+      @start = template.split('').first
+      @end = template.split('').last
 
-    def template
-      @template.join
+      template.split('').each_cons(2) { |pair|
+        @hash[pair] += 1
+      }
     end
 
     def step
-      @template = @template.each_cons(2).each_with_index.map { |pair, i|
-        insertion = @rules[pair]
+      new_hash = Hash.new(0)
 
-        if i == 0
-          a, b = *pair
-          [a, insertion, b]
-        else
-          [insertion, pair.last]
-        end
-      }.flatten
+      @hash.each { |pair, count|
+        i = @rules[pair]
+        a, b = *pair
+
+        new_hash[[a, i]] += count
+        new_hash[[i, b]] += count
+      }
+
+      @hash = new_hash
     end
 
     def answer
-      counts = @template.tally.values
-      min = counts.min
-      max = counts.max
+      counts = @hash.keys.flatten.uniq.map { |x|
+        @hash.sum { |k,v|
+          v * k.count(x)
+        } +
+          (x == @start ? 1 : 0) +
+          (x == @end ? 1 : 0)
+      }.sort
 
-      max - min
+      (counts.last - counts.first) / 2
     end
   end
 
@@ -43,8 +50,14 @@ class AoC::Day14Part1
   end
 
   def solution
-    10.times { @polymer.step }
+    iterations.times { @polymer.step }
 
     @polymer.answer
+  end
+
+  private
+
+  def iterations
+    10
   end
 end
