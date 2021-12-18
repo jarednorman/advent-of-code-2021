@@ -6,28 +6,44 @@ class AoC::Day15Part1
   end
 
   def solution
-    @mins = {}
+    visited = {}
+    risks = {}
 
-    min_path(width - 1, height - 1)
+    (0...width).each do |x|
+      (0...height).each do |y|
+        risks[[x, y]] = Float::INFINITY
+      end
+    end
+
+    risks[[0, 0]] = 0
+
+    until visited.count == risks.count
+      current = risks
+        .reject { |node, risk| visited[node] }
+        .min_by(&:last)
+        .first
+
+      neighbours(*current).each do |n|
+        risks[n] = [
+          risks[n],
+          risks[current] + at(*n)
+        ].min
+      end
+
+      visited[current] = true
+    end
+
+    risks[[width - 1, height - 1]]
   end
 
   private
 
-  def min_path(x, y)
-    if (m = @mins[[x, y]])
-      return m
-    end
-    return 0 if [x, y] == [0, 0]
-
-    @mins[[x,y]] = neighbours(x, y)
-      .map { |x,y| min_path(x, y) }
-      .min + at(x, y)
-  end
-
   def neighbours(x, y)
     [
       ([x, y - 1] if y > 0),
-      ([x - 1, y] if x > 0)
+      ([x - 1, y] if x > 0),
+      ([x, y + 1] if y < height - 1),
+      ([x + 1, y] if x < width - 1),
     ].compact
   end
 
