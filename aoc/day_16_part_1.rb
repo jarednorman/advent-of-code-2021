@@ -66,8 +66,6 @@ class AoC::Day16Part1
         else
           0
         end
-      else
-        binding.pry
       end
     end
   end
