@@ -35,6 +35,41 @@ class AoC::Day16Part1
     def version_sum
       version + subpackets.sum(&:version_sum)
     end
+
+    def evaluate
+      case type
+      when 0 # sum
+        subpackets.sum(&:evaluate)
+      when 1 # product
+        subpackets.map(&:evaluate).inject(:*)
+      when 2 # minimum
+        subpackets.map(&:evaluate).min
+      when 3 # maximum
+        subpackets.map(&:evaluate).max
+      when 4 # literal
+        value
+      when 5 # greater than
+        if subpackets.first.evaluate > subpackets.last.evaluate
+          1
+        else
+          0
+        end
+      when 6 # less than
+        if subpackets.first.evaluate < subpackets.last.evaluate
+          1
+        else
+          0
+        end
+      when 7 # equal to
+        if subpackets.first.evaluate == subpackets.last.evaluate
+          1
+        else
+          0
+        end
+      else
+        binding.pry
+      end
+    end
   end
 
   def initialize(input = File.read("data/day16.txt"))
