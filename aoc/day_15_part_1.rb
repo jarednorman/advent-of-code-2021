@@ -1,36 +1,48 @@
 class AoC::Day15Part1
   def initialize(input = File.read("data/day15.txt"))
+    @at = {}
     @map = input.strip.split("\n").map { |l|
       l.split('').map(&:to_i)
     }.transpose
   end
 
   def solution
-    visited = {}
-    risks = {}
+    visited = Set.new
+    unvisited = []
+    candidates = Set.new
+    risks = Hash.new(Float::INFINITY)
 
     (0...width).each do |x|
       (0...height).each do |y|
-        risks[[x, y]] = Float::INFINITY
+        unvisited << [x, y]
       end
     end
 
     risks[[0, 0]] = 0
+    candidates << [0, 0]
 
-    until visited.count == risks.count
-      current = risks
-        .reject { |node, risk| visited[node] }
-        .min_by(&:last)
-        .first
+    size = width * height
+
+    until visited.count == size
+      if visited.count % 100 == 0
+        puts "#{visited.count} out of #{size} nodes visited"
+      end
+      current = candidates.min_by { |node| risks[node] }
 
       neighbours(*current).each do |n|
-        risks[n] = [
-          risks[n],
-          risks[current] + at(*n)
-        ].min
+        unless visited.include?(n)
+          risks[n] = [
+            risks[n],
+            risks[current] + at(*n)
+          ].min
+
+          candidates << n
+        end
       end
 
-      visited[current] = true
+      unvisited.delete(current)
+      candidates.delete(current)
+      visited << current
     end
 
     risks[[width - 1, height - 1]]
