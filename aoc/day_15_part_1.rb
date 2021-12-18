@@ -8,7 +8,7 @@ class AoC::Day15Part1
 
   def solution
     visited = Set.new
-    unvisited = []
+    unvisited = Set.new
     candidates = Set.new
     risks = Hash.new(Float::INFINITY)
 
@@ -23,10 +23,7 @@ class AoC::Day15Part1
 
     size = width * height
 
-    until visited.count == size
-      if visited.count % 100 == 0
-        puts "#{visited.count} out of #{size} nodes visited"
-      end
+    until visited.size == size
       current = candidates.min_by { |node| risks[node] }
 
       neighbours(*current).each do |n|

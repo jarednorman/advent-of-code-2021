@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe "Day 15", :focus do
+RSpec.describe "Day 15" do
   subject { described_class.new(input).solution }
 
   let(:input) { <<~INPUT }
