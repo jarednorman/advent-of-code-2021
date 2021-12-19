@@ -25,7 +25,7 @@ RSpec.describe "Day 18" do
   end
 
   describe AoC::Day18Part1::SnailfishNumber do
-    describe "parsing", :focus do
+    describe "parsing" do
       subject { described_class.parse(str).to_a }
 
       let(:str) {
@@ -37,11 +37,47 @@ RSpec.describe "Day 18" do
       end
     end
 
-    describe "reduction" do
-      subject { described_class.new([[[[[9,8],1],2],3],4]).to_a }
+    describe "reduction", :focus do
+      subject { described_class.parse(str).to_a }
 
-      it "automatically reduces the number" do
-        expect(subject).to eq [[[[0,9],2],3],4]
+      context "reducing [[[[[9,8],1],2],3],4]" do
+        let(:str) { "[[[[[9,8],1],2],3],4]" }
+
+        it "automatically reduces the number" do
+          expect(subject).to eq [[[[0,9],2],3],4]
+        end
+      end
+
+      context "reducing [7,[6,[5,[4,[3,2]]]]]" do
+        let(:str) { "[7,[6,[5,[4,[3,2]]]]]" }
+
+        it "automatically reduces the number" do
+          expect(subject).to eq [7,[6,[5,[7,0]]]]
+        end
+      end
+
+      context "reducing [[6,[5,[4,[3,2]]]],1]" do
+        let(:str) { "[[6,[5,[4,[3,2]]]],1]" }
+
+        it "automatically reduces the number" do
+          expect(subject).to eq [[6,[5,[7,0]]],3]
+        end
+      end
+
+      context "reducing [[3,[2,[1,[7,3]]]],[6,[5,[4,[3,2]]]]]" do
+        let(:str) { "[[3,[2,[1,[7,3]]]],[6,[5,[4,[3,2]]]]]" }
+
+        it "automatically reduces the number" do
+          expect(subject).to eq [[3,[2,[8,0]]],[9,[5,[7,0]]]]
+        end
+      end
+
+      context "reducing [[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]" do
+        let(:str) { "[[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]" }
+
+        it "automatically reduces the number" do
+          expect(subject).to eq [[3,[2,[8,0]]],[9,[5,[7,0]]]]
+        end
       end
     end
   end

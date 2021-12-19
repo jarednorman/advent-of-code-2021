@@ -1,5 +1,9 @@
 class AoC::Day18Part1
-  Node = Struct.new(:parent, :left, :right, keyword_init: true)
+  class Node < Struct.new(:parent, :left, :right, keyword_init: true)
+    def number_pair?
+      [left, right].all? { |n| n.is_a?(Integer) }
+    end
+  end
 
   class SnailfishNumber
     def self.parse(str)
@@ -16,7 +20,7 @@ class AoC::Day18Part1
     end
 
     def initialize(tree)
-      @tree = tree #reduce(tree)
+      @tree = reduce(tree)
     end
 
     def to_a(node = @tree)
@@ -43,10 +47,10 @@ class AoC::Day18Part1
     def reduce(tree)
       loop do
         if explodable?(tree)
-          tree = explode(tree)
+          explode(tree, 0)
           next
         elsif splittable?(tree)
-          tree = split(tree)
+          split(tree)
           next
         end
 
@@ -54,21 +58,79 @@ class AoC::Day18Part1
       end
     end
 
-    def explodable?(tree)
-      tree.any? { |cell| nested_four_deep?(cell, 1) }
+    def explodable?(node)
+      nested_four_deep?(node.left, 1) || nested_four_deep?(node.right, 1)
     end
 
-    def nested_four_deep?(cell, depth)
-      if cell.is_a?(Integer)
+    def nested_four_deep?(node, depth)
+      if node.is_a?(Integer)
         false
-      elsif depth == 4 && cell.is_a?(Array)
+      elsif depth >= 4 && node.left.is_a?(Integer) && node.right.is_a?(Integer)
         true
       else
-        cell.any? { |cell| nested_four_deep?(cell, depth + 1) }
+        nested_four_deep?(node.left, depth + 1) ||
+          nested_four_deep?(node.right, depth + 1)
       end
     end
 
-    def explode(tree)
+    def explode(node, depth)
+      return if node.is_a?(Integer)
+
+      if node.number_pair? && depth >= 4
+        # 1. left value goes left
+        last = node
+        current = node.parent
+        until current.left != last
+          last = current
+          current = current.parent
+          break if current.nil?
+        end
+
+        if current
+          if current.left.is_a?(Integer)
+            current.left += node.left
+          else
+            loop do
+              current = current.left
+              break if current.right.is_a?(Integer)
+            end
+
+            current.right += node.left
+          end
+        end
+
+        # 2. right value goes right
+        last = node
+        current = node.parent
+        until current.right != last
+          last = current
+          current = current.parent
+          break if current.nil?
+        end
+
+        if current
+          if current.right.is_a?(Integer)
+            current.right += node.right
+          else
+            loop do
+              current = current.right
+              break if current.left.is_a?(Integer)
+            end
+
+            current.left += node.right
+          end
+        end
+
+        # 3. pair is replaced with 0
+        if node.parent.left == node
+          node.parent.left = 0
+        else
+          node.parent.right = 0
+        end
+      end
+
+      explode(node.left, depth + 1) ||
+        explode(node.right, depth + 1)
     end
 
     def splittable?(tree)
