@@ -37,36 +37,33 @@ class AoC::Day17Part1
   def solution
     hits = []
 
-    # (0..@x_range.end).each do |vx|
-    #   next unless ever_hits_range?(vx)
-      (0..500).each do |vy|
-        probe = Probe.new(x: 0, y: 0, vx: 0, vy: vy, max_y: 0)
+    (0..500).each do |vy|
+      probe = Probe.new(x: 0, y: 0, vx: 0, vy: vy, max_y: 0)
 
-        loop do
-          probe = probe.step
+      loop do
+        probe = probe.step
 
-          if probe.hit?(-1..1, @y_range)
-            hits << [probe.max_y, vy]
-            break
-          elsif probe.overshot?(-1..1, @y_range)
-            break
-          end
+        if probe.hit?(-1..1, @y_range)
+          hits << [probe.max_y, vy]
+          break
+        elsif probe.overshot?(-1..1, @y_range)
+          break
         end
       end
-    # end
+    end
 
     hits.map(&:first).max
   end
 
-  # def ever_hits_range?(vx)
-  #   x = 0
+  def ever_hits_range?(vx)
+    x = 0
 
-  #   loop do
-  #     return true if @x_range.cover?(x)
-  #     return false if vx == 0 || x > @x_range.end
+    loop do
+      return true if @x_range.cover?(x)
+      return false if vx == 0 || x > @x_range.end
 
-  #     x += vx
-  #     vx -= 1
-  #   end
-  # end
+      x += vx
+      vx -= 1
+    end
+  end
 end
