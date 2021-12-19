@@ -30,7 +30,7 @@ RSpec.describe "Day 16" do
     end
   end
 
-  describe AoC::Day16Part2, :focus do
+  describe AoC::Day16Part2 do
     context "finding the sum of 1 and 2" do
       let(:input) { "C200B40A82" }
 
