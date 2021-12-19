@@ -133,8 +133,34 @@ class AoC::Day18Part1
         explode(node.right, depth + 1)
     end
 
-    def splittable?(tree)
-      false
+    def splittable?(node)
+      return node >= 10 if node.is_a?(Integer)
+
+      splittable?(node.left) || splittable?(node.right)
+    end
+
+    def split(node)
+      return false if node.is_a?(Integer)
+
+      current = node
+
+      if current.left.is_a?(Integer) && current.left >= 10
+        current.left = Node.new(
+          parent: current,
+          left: (current.left / 2.0).floor,
+          right: (current.left / 2.0).ceil,
+        )
+        return true
+      elsif current.right.is_a?(Integer) && current.right >= 10
+        current.right = Node.new(
+          parent: current,
+          left: (current.right / 2.0).floor,
+          right: (current.right / 2.0).ceil,
+        )
+        return true
+      end
+
+      split(node.left) || split(node.right)
     end
   end
 

@@ -37,10 +37,34 @@ RSpec.describe "Day 18" do
       end
     end
 
-    describe "reduction", :focus do
+    describe "reducing" do
       subject { described_class.parse(str).to_a }
 
-      context "reducing [[[[[9,8],1],2],3],4]" do
+      context "reducing [[[[[4,3],4],4],[7,[[8,4],9]]],[1,1]]" do
+        let(:str) { "[[[[[4,3],4],4],[7,[[8,4],9]]],[1,1]]" }
+
+        it "automatically splits the number" do
+          expect(subject).to eq [[[[0,7],4],[[7,8],[6,0]]],[8,1]]
+        end
+      end
+    end
+
+    describe "splitting" do
+      subject { described_class.parse(str).to_a }
+
+      context "splitting [[7,8],[0,13]]" do
+        let(:str) { "[[7,8],[0,13]]" }
+
+        it "automatically splits the number" do
+          expect(subject).to eq [[7,8],[0,[6,7]]]
+        end
+      end
+    end
+
+    describe "explosions" do
+      subject { described_class.parse(str).to_a }
+
+      context "exploding [[[[[9,8],1],2],3],4]" do
         let(:str) { "[[[[[9,8],1],2],3],4]" }
 
         it "automatically reduces the number" do
@@ -48,7 +72,7 @@ RSpec.describe "Day 18" do
         end
       end
 
-      context "reducing [7,[6,[5,[4,[3,2]]]]]" do
+      context "exploding [7,[6,[5,[4,[3,2]]]]]" do
         let(:str) { "[7,[6,[5,[4,[3,2]]]]]" }
 
         it "automatically reduces the number" do
@@ -56,7 +80,7 @@ RSpec.describe "Day 18" do
         end
       end
 
-      context "reducing [[6,[5,[4,[3,2]]]],1]" do
+      context "exploding [[6,[5,[4,[3,2]]]],1]" do
         let(:str) { "[[6,[5,[4,[3,2]]]],1]" }
 
         it "automatically reduces the number" do
@@ -64,7 +88,7 @@ RSpec.describe "Day 18" do
         end
       end
 
-      context "reducing [[3,[2,[1,[7,3]]]],[6,[5,[4,[3,2]]]]]" do
+      context "exploding [[3,[2,[1,[7,3]]]],[6,[5,[4,[3,2]]]]]" do
         let(:str) { "[[3,[2,[1,[7,3]]]],[6,[5,[4,[3,2]]]]]" }
 
         it "automatically reduces the number" do
@@ -72,7 +96,7 @@ RSpec.describe "Day 18" do
         end
       end
 
-      context "reducing [[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]" do
+      context "exploding [[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]" do
         let(:str) { "[[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]" }
 
         it "automatically reduces the number" do
