@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe "Day 18" do
+RSpec.describe "Day 18", :focus do
   subject { described_class.new(input).solution }
 
   let(:input) { <<~INPUT }
@@ -35,6 +35,15 @@ RSpec.describe "Day 18" do
       it "parses stuff right" do
         expect(subject).to eq([[[[1,2],[3,4]],[[5,6],[7,8]]],9])
       end
+    end
+
+    describe "addition" do
+      subject { (a + b).to_a }
+
+      let(:a) { described_class.parse("[[[[4,3],4],4],[7,[[8,4],9]]]") }
+      let(:b) { described_class.parse("[1,1]") }
+
+      it { is_expected.to eq [[[[0,7],4],[[7,8],[6,0]]],[8,1]] }
     end
 
     describe "reducing" do

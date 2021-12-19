@@ -23,6 +23,10 @@ class AoC::Day18Part1
       @tree = reduce(tree)
     end
 
+    def tree
+      @tree
+    end
+
     def to_a(node = @tree)
       return node if node.is_a?(Integer)
 
@@ -33,8 +37,15 @@ class AoC::Day18Part1
     end
 
     def +(other)
-      # FIXME
-      self
+      node = Node.new(
+        left: tree,
+        right: other.tree
+      )
+
+      node.left.parent = node unless node.left.is_a?(Integer)
+      node.right.parent = node unless node.right.is_a?(Integer)
+
+      self.class.new(node)
     end
 
     def magnitude
@@ -80,6 +91,7 @@ class AoC::Day18Part1
         # 1. left value goes left
         last = node
         current = node.parent
+
         until current.left != last
           last = current
           current = current.parent
@@ -90,9 +102,11 @@ class AoC::Day18Part1
           if current.left.is_a?(Integer)
             current.left += node.left
           else
+            current = current.left
+
             loop do
-              current = current.left
               break if current.right.is_a?(Integer)
+              current = current.right
             end
 
             current.right += node.left
@@ -102,6 +116,7 @@ class AoC::Day18Part1
         # 2. right value goes right
         last = node
         current = node.parent
+
         until current.right != last
           last = current
           current = current.parent
@@ -112,9 +127,11 @@ class AoC::Day18Part1
           if current.right.is_a?(Integer)
             current.right += node.right
           else
+            current = current.right
+
             loop do
-              current = current.right
               break if current.left.is_a?(Integer)
+              current = current.left
             end
 
             current.left += node.right
@@ -171,6 +188,6 @@ class AoC::Day18Part1
   end
 
   def solution
-    @numbers.sum.magnitude
+    @numbers.inject(&:+).magnitude
   end
 end
