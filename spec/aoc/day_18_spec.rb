@@ -25,6 +25,87 @@ RSpec.describe "Day 18", :focus do
   end
 
   describe AoC::Day18Part1::SnailfishNumber do
+    describe "homework" do
+      it "computes the homework result correctly" do
+        one = described_class.parse("[[[0,[4,5]],[0,0]],[[[4,5],[2,6]],[9,5]]]")
+        two = described_class.parse("[7,[[[3,7],[4,3]],[[6,3],[8,8]]]]")
+        three = described_class.parse("[[2,[[0,8],[3,4]]],[[[6,7],1],[7,[1,6]]]]")
+        four = described_class.parse("[[[[2,4],7],[6,[0,5]]],[[[6,8],[2,8]],[[2,1],[4,5]]]]")
+        five = described_class.parse("[7,[5,[[3,8],[1,4]]]]")
+        six = described_class.parse("[[2,[2,2]],[8,[8,1]]]")
+        seven = described_class.parse("[2,9]")
+        eight = described_class.parse("[1,[[[9,3],9],[[9,0],[0,7]]]]")
+        nine = described_class.parse("[[[5,[7,4]],7],1]")
+        ten = described_class.parse("[[[[4,2],2],6],[8,7]]")
+
+        sum = one + two
+        expect(sum.to_a)
+          .to eq [[[[4,0],[5,4]],[[7,7],[6,0]]],[[8,[7,7]],[[7,9],[5,0]]]]
+
+        sum += three
+        expect(sum.to_a)
+          .to eq [[[[6,7],[6,7]],[[7,7],[0,7]]],[[[8,7],[7,7]],[[8,8],[8,0]]]]
+
+        sum += four
+        expect(sum.to_a)
+          .to eq [[[[7,0],[7,7]],[[7,7],[7,8]]],[[[7,7],[8,8]],[[7,7],[8,7]]]]
+
+        sum += five
+        expect(sum.to_a)
+          .to eq [[[[7,7],[7,8]],[[9,5],[8,7]]],[[[6,8],[0,8]],[[9,9],[9,0]]]]
+
+        sum += six
+        sum += seven
+        sum += eight
+        sum += nine
+        sum += ten
+
+        expect(sum.to_a).to eq [[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]
+      end
+
+      context "homework examples" do
+        subject {
+          homework.map { |n| described_class.parse(n) }.inject(&:+).to_a
+        }
+
+        context "with homework example 1" do
+          let(:homework) { <<~STR.strip.split("\n") }
+            [1,1]
+            [2,2]
+            [3,3]
+            [4,4]
+          STR
+
+          it { is_expected.to eq [[[[1,1],[2,2]],[3,3]],[4,4]] }
+        end
+
+        context "with homework example 2" do
+          let(:homework) { <<~STR.strip.split("\n") }
+            [1,1]
+            [2,2]
+            [3,3]
+            [4,4]
+            [5,5]
+          STR
+
+          it { is_expected.to eq [[[[3,0],[5,3]],[4,4]],[5,5]] }
+        end
+
+        context "with homework example 2" do
+          let(:homework) { <<~STR.strip.split("\n") }
+            [1,1]
+            [2,2]
+            [3,3]
+            [4,4]
+            [5,5]
+            [6,6]
+          STR
+
+          it { is_expected.to eq [[[[5,0],[7,4]],[5,5]],[6,6]] }
+        end
+      end
+    end
+
     describe "parsing" do
       subject { described_class.parse(str).to_a }
 
@@ -40,10 +121,44 @@ RSpec.describe "Day 18", :focus do
     describe "addition" do
       subject { (a + b).to_a }
 
-      let(:a) { described_class.parse("[[[[4,3],4],4],[7,[[8,4],9]]]") }
-      let(:b) { described_class.parse("[1,1]") }
+      describe "adding example 1" do
+        let(:a) { described_class.parse("[[[[4,3],4],4],[7,[[8,4],9]]]") }
+        let(:b) { described_class.parse("[1,1]") }
 
-      it { is_expected.to eq [[[[0,7],4],[[7,8],[6,0]]],[8,1]] }
+        it { is_expected.to eq [[[[0,7],4],[[7,8],[6,0]]],[8,1]] }
+      end
+
+      describe "adding example 2" do
+        let(:a) {
+          described_class.parse(
+            "[[[[6,7],[6,7]],[[7,7],[0,7]]],[[[8,7],[7,7]],[[8,8],[8,0]]]]"
+          )
+        }
+        let(:b) {
+          described_class.parse(
+            "[[[[2,4],7],[6,[0,5]]],[[[6,8],[2,8]],[[2,1],[4,5]]]]"
+          )
+        }
+
+        it { is_expected
+          .to eq [[[[7,0],[7,7]],[[7,7],[7,8]]],[[[7,7],[8,8]],[[7,7],[8,7]]]] }
+      end
+
+      describe "adding example 3" do
+        let(:a) {
+          described_class.parse(
+            "[[[[1,2],1],1],1]"
+          )
+        }
+        let(:b) {
+          described_class.parse(
+            "[[[[1,2],1],1],1]"
+          )
+        }
+
+        it { is_expected
+          .to eq [[[[0,3],1],2],[[[0,3],1],1]] }
+      end
     end
 
     describe "reducing" do
@@ -66,6 +181,14 @@ RSpec.describe "Day 18", :focus do
 
         it "automatically splits the number" do
           expect(subject).to eq [[7,8],[0,[6,7]]]
+        end
+      end
+
+      context "splitting [[7,1],[10,3]]" do
+        let(:str) { "[[7,1],[10,3]]" }
+
+        it "automatically splits the number" do
+          expect(subject).to eq [[7,1],[[5,5],3]]
         end
       end
     end

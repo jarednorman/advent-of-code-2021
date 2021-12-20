@@ -1,7 +1,29 @@
 class AoC::Day18Part1
+  class << self
+    attr_accessor :debug
+  end
+
   class Node < Struct.new(:parent, :left, :right, keyword_init: true)
     def number_pair?
       [left, right].all? { |n| n.is_a?(Integer) }
+    end
+
+    def magnitude
+      3 * left_magnitude + 2 * right_magnitude
+    end
+
+    private
+
+    def left_magnitude
+      return left if left.is_a?(Integer)
+
+      left.magnitude
+    end
+
+    def right_magnitude
+      return right if right.is_a?(Integer)
+
+      right.magnitude
     end
   end
 
@@ -49,8 +71,7 @@ class AoC::Day18Part1
     end
 
     def magnitude
-      # FIXME
-      0
+      tree.magnitude
     end
 
     private
@@ -92,7 +113,7 @@ class AoC::Day18Part1
         last = node
         current = node.parent
 
-        until current.left != last
+        until current.left.object_id != last.object_id
           last = current
           current = current.parent
           break if current.nil?
@@ -117,7 +138,7 @@ class AoC::Day18Part1
         last = node
         current = node.parent
 
-        until current.right != last
+        until current.right.object_id != last.object_id
           last = current
           current = current.parent
           break if current.nil?
@@ -139,11 +160,13 @@ class AoC::Day18Part1
         end
 
         # 3. pair is replaced with 0
-        if node.parent.left == node
+        if node.parent.left.object_id == node.object_id
           node.parent.left = 0
         else
           node.parent.right = 0
         end
+
+        return true
       end
 
       explode(node.left, depth + 1) ||
@@ -168,7 +191,11 @@ class AoC::Day18Part1
           right: (current.left / 2.0).ceil,
         )
         return true
-      elsif current.right.is_a?(Integer) && current.right >= 10
+      end
+
+      return true if split(node.left) 
+
+      if current.right.is_a?(Integer) && current.right >= 10
         current.right = Node.new(
           parent: current,
           left: (current.right / 2.0).floor,
@@ -177,7 +204,7 @@ class AoC::Day18Part1
         return true
       end
 
-      split(node.left) || split(node.right)
+      split(node.right)
     end
   end
 
