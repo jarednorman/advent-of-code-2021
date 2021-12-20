@@ -209,12 +209,12 @@ class AoC::Day18Part1
   end
 
   def initialize(input = File.read("data/day18.txt"))
-    @numbers = input.strip.split("\n").map { |str|
-      SnailfishNumber.parse(str)
-    }
+    @numbers = input.strip.split("\n")
   end
 
   def solution
-    @numbers.inject(&:+).magnitude
+    @numbers.map { |str|
+      SnailfishNumber.parse(str)
+    }.inject(&:+).magnitude
   end
 end

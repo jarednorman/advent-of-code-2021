@@ -20,8 +20,8 @@ RSpec.describe "Day 18", :focus do
     it { is_expected.to eq 4140 }
   end
 
-  describe AoC::Day18Part2, :skip do
-    it { is_expected.to eq nil }
+  describe AoC::Day18Part2 do
+    it { is_expected.to eq 3993 }
   end
 
   describe AoC::Day18Part1::SnailfishNumber do
