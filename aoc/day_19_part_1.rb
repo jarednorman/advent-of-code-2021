@@ -38,13 +38,16 @@ class AoC::Day19Part1
   ].map { |m| Matrix[*m] }
 
   class Scanner
-    def initialize(name:, beacons:)
+    def initialize(name:, beacons:, location: nil)
       @name = name
       @beacons = beacons
       @orientations = MATRICES.map do |m|
         beacons.map { |v| m * v }.to_set
       end
+      @location = location
     end
+
+    attr_accessor :location
 
     def align_beacons(other_beacons)
       @orientations.each do |oriented_beacons|
@@ -59,7 +62,8 @@ class AoC::Day19Part1
               puts "found alignment for #{name}"
               return self.class.new(
                 name: name,
-                beacons: translated_beacons
+                beacons: translated_beacons,
+                location: d
               )
             end
           end
@@ -90,6 +94,7 @@ class AoC::Day19Part1
     resolved_beacons = Set.new
 
     resolved << first
+    first.location = Vector[0, 0, 0]
     resolved_beacons += first.beacons
 
     # search through additional beacons to find another match with resolved

@@ -142,11 +142,11 @@ RSpec.describe "Day 19" do
     30,-46,-14
   INPUT
 
-  describe AoC::Day19Part1, :focus do
+  describe AoC::Day19Part1 do
     it { is_expected.to eq 79 }
   end
 
-  describe AoC::Day19Part2, :skip do
-    it { is_expected.to eq nil }
+  describe AoC::Day19Part2 do
+    it { is_expected.to eq 3621 }
   end
 end
