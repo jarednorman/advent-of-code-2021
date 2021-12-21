@@ -1,6 +1,10 @@
 require 'matrix'
 
 class AoC::Day19Part1
+  ORDER = %w[0 10 11 25 1 7 14 18 17 27
+             21 5 3 22 8 2 9 13 15 6
+             12 16 19 23 24 26 28 4 20 29].map { |n| "scanner #{n}" }
+
   MATRICES = [
     [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
     [[1, 0, 0], [0, 0, -1], [0, 1, 0]],
@@ -45,6 +49,7 @@ class AoC::Day19Part1
     def align_beacons(other_beacons)
       @orientations.each do |oriented_beacons|
         oriented_beacons.each do |b1|
+          # do something smarter
           other_beacons.each do |b2|
             d = b1 - b2
 
@@ -52,7 +57,10 @@ class AoC::Day19Part1
 
             if (translated_beacons & other_beacons).size >= 12
               puts "found alignment for #{name}"
-              return translated_beacons
+              return self.class.new(
+                name: name,
+                beacons: translated_beacons
+              )
             end
           end
         end
@@ -72,37 +80,28 @@ class AoC::Day19Part1
         name: /--- (.*) ---/.match(name)[1],
         beacons: Set[*beacons.map { |b| Vector[*b.split(",").map(&:to_i)] }]
       )
-    }
+    }.sort_by { |scanner| ORDER.index(scanner.name) }
   end
 
   def solution
     # start with no beacons "resolved"
-    map = Set.new
-    unresolved = @scanners
+    first, *unresolved = *@scanners
+    resolved = Set.new
+    resolved_beacons = Set.new
 
-    # compare beacons to find one with at least 12 matches
-    unresolved.combination(2).each { |a, b|
-      beacons = a.align_beacons(b.beacons)
-
-      next unless beacons
-
-      map += b.beacons
-      map += beacons
-      unresolved.delete(a)
-      unresolved.delete(b)
-
-      break
-    }
+    resolved << first
+    resolved_beacons += first.beacons
 
     # search through additional beacons to find another match with resolved
     # repeat until all resolved
     until unresolved.empty?
       unresolved.each { |scanner|
-        beacons = scanner.align_beacons(map)
+        aligned = scanner.align_beacons(resolved_beacons)
 
-        next unless beacons
+        next unless aligned
 
-        map += beacons
+        resolved << aligned
+        resolved_beacons += aligned.beacons
         unresolved.delete(scanner)
 
         break
@@ -110,6 +109,6 @@ class AoC::Day19Part1
     end
 
     # count 'em
-    map.size
+    resolved_beacons.size
   end
 end
