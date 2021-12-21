@@ -19,7 +19,9 @@ class AoC::Day21Part1
     @p1_pos, @p2_pos = *input.strip.split("\n").map { |line|
       line.split(" ").last.to_i
     }
+  end
 
+  def solution
     @p1_pos -= 1
     @p2_pos -= 1
 
@@ -27,9 +29,7 @@ class AoC::Day21Part1
     @p2_score = 0
 
     @die = DeterministicDie.new
-  end
 
-  def solution
     loop do
       move = @die.roll + @die.roll + @die.roll
 

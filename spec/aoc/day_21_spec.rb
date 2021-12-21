@@ -8,11 +8,11 @@ RSpec.describe "Day 21" do
     Player 2 starting position: 8
   INPUT
 
-  describe AoC::Day21Part1, :focus do
+  describe AoC::Day21Part1, :skip do
     it { is_expected.to eq 739785 }
   end
 
-  describe AoC::Day21Part2, :skip do
-    it { is_expected.to eq nil }
+  describe AoC::Day21Part2, :focus do
+    it { is_expected.to eq 444_356_092_776_315 }
   end
 end
