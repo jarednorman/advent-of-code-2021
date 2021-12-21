@@ -59,7 +59,6 @@ class AoC::Day19Part1
             translated_beacons = oriented_beacons.map { |b| b - d }.to_set
 
             if (translated_beacons & other_beacons).size >= 12
-              puts "found alignment for #{name}"
               return self.class.new(
                 name: name,
                 beacons: translated_beacons,
