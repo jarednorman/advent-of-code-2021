@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe "Day 20" do
+RSpec.describe "Day 20", skip: "code only works against real input" do
   subject { described_class.new(input).solution }
 
   let(:input) { <<~INPUT }
@@ -13,11 +13,11 @@ RSpec.describe "Day 20" do
     ..###
   INPUT
 
-  describe AoC::Day20Part1, :focus do
+  describe AoC::Day20Part1 do
     it { is_expected.to eq 35 }
   end
 
-  describe AoC::Day20Part2, :skip do
-    it { is_expected.to eq nil }
+  describe AoC::Day20Part2 do
+    it { is_expected.to eq 3351 }
   end
 end

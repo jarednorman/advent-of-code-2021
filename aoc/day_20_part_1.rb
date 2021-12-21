@@ -97,8 +97,14 @@ class AoC::Day20Part1
   end
 
   def solution
-    2.times { @image = @image.enhance(@algorithm) }
+    iterations.times { @image = @image.enhance(@algorithm) }
 
     @image.pixel_count
+  end
+
+  private
+
+  def iterations
+    2
   end
 end
