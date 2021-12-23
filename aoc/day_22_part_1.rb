@@ -5,8 +5,14 @@ class AoC::Day22Part1
       x, y, z = *eval(coordinates)
       new(
         on: on == "on",
-        x: x, y: y, z: z
+        x: constrain(x),
+        y: constrain(y),
+        z: constrain(z)
       )
+    end
+
+    def self.constrain(r)
+      ([r.begin, -50].max)..([r.end, 50].min)
     end
   end
 
