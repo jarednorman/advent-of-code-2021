@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe "Day 22" do
+RSpec.describe "Day 22", :focus do
   subject { described_class.new(input).solution }
 
   let(:input) { <<~INPUT }
@@ -66,11 +66,11 @@ RSpec.describe "Day 22" do
     off x=-93533..-4276,y=-16170..68771,z=-104985..-24507
   INPUT
 
-  describe AoC::Day22Part1, :focus do
+  describe AoC::Day22Part1 do
     it { is_expected.to eq 474_140 }
   end
 
-  describe AoC::Day22Part2, :skip do
+  describe AoC::Day22Part2 do
     it { is_expected.to eq 2_758_514_936_282_235 }
   end
 end
