@@ -71,6 +71,6 @@ RSpec.describe "Day 22" do
   end
 
   describe AoC::Day22Part2, :skip do
-    it { is_expected.to eq 2758514936282235 }
+    it { is_expected.to eq 2_758_514_936_282_235 }
   end
 end
