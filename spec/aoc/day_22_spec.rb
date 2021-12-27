@@ -1,9 +1,9 @@
 require "spec_helper"
 
-RSpec.describe "Day 22" do
+RSpec.describe "Day 22", :focus do
   subject { described_class.new(input).solution }
 
-  describe AoC::Day22Part1, :focus do
+  describe AoC::Day22Part1 do
     let(:input) { <<~INPUT }
       on x=-20..26,y=-36..17,z=-47..7
       on x=-20..33,y=-21..23,z=-26..28

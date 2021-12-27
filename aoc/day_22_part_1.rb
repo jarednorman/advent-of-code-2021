@@ -4,14 +4,20 @@ class AoC::Day22Part1
       on, coordinates = *str.split(" ")
       xr, yr, zr = *eval(coordinates)
 
-      xr = constrain_range ? constrain(xr) : xr
-      yr = constrain_range ? constrain(yr) : yr
-      zr = constrain_range ? constrain(zr) : zr
+      x1 = constrain(xr.begin, constrain_range)
+      x2 = constrain(xr.end + 1, constrain_range)
+      y1 = constrain(yr.begin, constrain_range)
+      y2 = constrain(yr.end + 1, constrain_range)
+      z1 = constrain(zr.begin, constrain_range)
+      z2 = constrain(zr.end + 1, constrain_range)
 
       cuboid = Cuboid.new(
-        x1: xr.begin, x2: xr.end,
-        y1: yr.begin, y2: yr.end,
-        z1: zr.begin, z2: zr.end
+        x1: x1,
+        x2: x2,
+        y1: y1,
+        y2: y2,
+        z1: z1,
+        z2: z2
       )
 
       new(
@@ -20,8 +26,10 @@ class AoC::Day22Part1
       )
     end
 
-    def self.constrain(r)
-      ([[r.begin, -50].max, 50].min)..([[r.end + 1, 50].min, -50].max)
+    def self.constrain(v, constrain)
+      return v unless constrain
+
+      v.clamp(-50, 51)
     end
   end
 
@@ -38,12 +46,12 @@ class AoC::Day22Part1
     def -(other)
       return [self] unless intersecting?(other)
 
-      ox1 = [[other.x1, x1].max, x2].min
-      ox2 = [[other.x1, x2].max, x2].min
-      oy1 = [[other.y1, y1].max, y2].min
-      oy2 = [[other.y1, y2].max, y2].min
-      oz1 = [[other.z1, z1].max, z2].min
-      oz2 = [[other.z1, z2].max, z2].min
+      ox1 = other.x1.clamp(x1, x2)
+      ox2 = other.x2.clamp(x1, x2)
+      oy1 = other.y1.clamp(y1, y2)
+      oy2 = other.y2.clamp(y1, y2)
+      oz1 = other.z1.clamp(z1, z2)
+      oz2 = other.z2.clamp(z1, z2)
 
       [
         Cuboid.new(x1: x1,  x2: x2,  y1: y1,  y2: y2,  z1: z1,  z2: oz1),
