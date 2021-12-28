@@ -33,17 +33,20 @@ class AoC::Day23Part1
       })
     end
 
-    def cheapest_cost(cost)
-      binding.pry if done?
-      return cost if done?
-
+    def cheapest_cost(cost, seen)
       # We can cheat and optimize here:
-      return if cost > 12521
+      return if cost > 14419
+
+      return if seen[self] && seen[self] <= cost
+
+      seen[self] = cost
+
+      return cost if done?
 
       next_states.sort_by { |state, additional_cost|
         [-state.correctness, -additional_cost]
       }.map { |state, additional_cost|
-        state.cheapest_cost(cost + additional_cost)
+        state.cheapest_cost(cost + additional_cost, seen)
       }.compact.min
     end
 
@@ -167,6 +170,7 @@ class AoC::Day23Part1
   end
 
   def solution
-    @initial.cheapest_cost(0)
+    seen = {}
+    @initial.cheapest_cost(0, seen)
   end
 end
