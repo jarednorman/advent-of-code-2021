@@ -17,7 +17,7 @@ class AoC::Day23Part1
     [8, 2] => "D",
   }
 
-  State = Struct.new(:positions, :cost) do
+  State = Struct.new(:positions) do
     def self.parse(input)
       letters = input.strip.gsub(/\W/, '')
 
@@ -30,21 +30,21 @@ class AoC::Day23Part1
         [4, 2] => letters[5],
         [6, 2] => letters[6],
         [8, 2] => letters[7],
-      }, 0)
+      })
     end
 
-    def cheapest_cost
+    def cheapest_cost(cost)
       binding.pry if done?
       return cost if done?
 
-      # Shhhh
+      # We can cheat and optimize here:
       return if cost > 12521
 
-      print
-
-      next_states.sort_by { |state|
-        state.correctness
-      }.reverse.map(&:cheapest_cost).compact.min
+      next_states.sort_by { |state, additional_cost|
+        [-state.correctness, -additional_cost]
+      }.map { |state, additional_cost|
+        state.cheapest_cost(cost + additional_cost)
+      }.compact.min
     end
 
     def next_states
@@ -66,7 +66,7 @@ class AoC::Day23Part1
             new_positions = positions.dup
             new_positions[[hallway_x, 0]] = new_positions.delete([x, y])
 
-            self.class.new(new_positions, additional_cost + cost)
+            [self.class.new(new_positions), additional_cost]
           }.compact
         else
           destinations = {
@@ -81,21 +81,45 @@ class AoC::Day23Part1
           next [] unless dest
           next [] unless passable?(x, dest.first)
 
+          if dest.last == 1 && !correct?([dest.first, 2])
+            next []
+          end
+
           additional_cost =
             ((x - dest.first).abs + (y - dest.last).abs) * COSTS[positions[[x, y]]]
 
           new_positions = positions.dup
           new_positions[dest] = new_positions.delete([x, y])
 
-          [self.class.new(new_positions, additional_cost + cost)]
+          [[self.class.new(new_positions), additional_cost]]
         end
-      }
+      }.to_h
     end
 
     def correctness
-      FINAL.count do |pos, letter|
-        positions[pos] == letter
+      c = 0
+
+      if positions[[2, 2]] == "A"
+        c += 1
+        c += 1 if positions[[2, 1]] == "A"
       end
+
+      if positions[[4, 2]] == "B"
+        c += 1
+        c += 1 if positions[[4, 1]] == "B"
+      end
+
+      if positions[[6, 2]] == "C"
+        c += 1
+        c += 1 if positions[[6, 1]] == "C"
+      end
+
+      if positions[[8, 2]] == "D"
+        c += 1
+        c += 1 if positions[[8, 1]] == "D"
+      end
+
+      c
     end
 
     def done?
@@ -129,7 +153,6 @@ class AoC::Day23Part1
     def print
       puts <<~STR
         
-        Cost: #{cost}
         #############
         ##{(0..10).map { |x| positions[[x, 0]] || "." }.join}#
         ####{positions[[2, 1]] || "."}##{positions[[4, 1]] || "."}##{positions[[6, 1]] || "."}##{positions[[8, 1]] || "."}###
@@ -144,6 +167,6 @@ class AoC::Day23Part1
   end
 
   def solution
-    @initial.cheapest_cost
+    @initial.cheapest_cost(0)
   end
 end

@@ -1,6 +1,6 @@
 require "spec_helper"
 
-RSpec.describe "Day 22", :focus do
+RSpec.describe "Day 22" do
   subject { described_class.new(input).solution }
 
   describe AoC::Day22Part1 do
