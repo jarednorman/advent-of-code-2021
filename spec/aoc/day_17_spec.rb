@@ -38,14 +38,14 @@ RSpec.describe "Day 17" do
       expect(probe.x).to eq 18
       expect(probe.y).to eq 3
       expect(probe.vx).to eq 4
-      expect(probe.vy).to eq -1
+      expect(probe.vy).to eq(-1)
 
       probe = probe.step
 
       expect(probe.x).to eq 22
       expect(probe.y).to eq 2
       expect(probe.vx).to eq 3
-      expect(probe.vy).to eq -2
+      expect(probe.vy).to eq(-2)
 
       expect(probe.max_y).to eq 3
     end
