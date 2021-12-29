@@ -1,163 +1,77 @@
 class AoC::Day24Part1
+  PARAMS = [
+    {a: 1,  b: 11,  c: 14},
+    {a: 1,  b: 13,  c: 8},
+    {a: 1,  b: 11,  c: 4},
+    {a: 1,  b: 10,  c: 10},
+    {a: 26, b: -3,  c: 14},
+    {a: 26, b: -4,  c: 10},
+    {a: 1,  b: 12,  c: 4},
+    {a: 26, b: -8,  c: 14},
+    {a: 26, b: -3,  c: 1},
+    {a: 26, b: -12, c: 6},
+    {a: 1,  b: 14,  c: 0},
+    {a: 26, b: -6,  c: 9},
+    {a: 1,  b: 11,  c: 13},
+    {a: 26, b: -12, c: 12}
+  ]
+
+  BUDGET = 14.times.map { |i|
+    PARAMS[i, 14].map { |param| param[:a] }.inject(:*)
+  }
+
+  def digits
+    9.downto(1)
+  end
+
   def solution
-    model_numbers.peach_with_index.select { |number, i|
-      puts i if i % 100000 == 0
-      valid? number
-    }.pmap { |number| number.first.join('').to_i }.max
+    @tested = 0
+    highest_valid(z: 0, index: 0)
   end
 
   private
 
-  def model_numbers
-    nums = 9.downto(1)
-    Enumerator.new do |y|
-      nums.each { |a|
-        nums.each { |b|
-          nums.each { |c|
-            nums.each { |d|
-              nums.each { |e|
-                nums.each { |f|
-                  nums.each { |g|
-                    nums.each { |h|
-                      nums.each { |i|
-                        nums.each { |j|
-                          nums.each { |k|
-                            nums.each { |l|
-                              nums.each { |m|
-                                nums.each { |n|
-                                  y << [
-                                    a, b, c, e, f,
-                                    g, h, i, j, k,
-                                    l, m, n, n
-                                  ]
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+  def highest_valid(z:, index:, model_number: [])
+    if z >= BUDGET[index]
+      return
+    end
+
+    if index != 13
+      digits.each { |d|
+        new_z = compute_z(digit: d, z: z, index: index)
+
+        if (result = highest_valid(z: new_z, index: index + 1, model_number: [*model_number, d]))
+          return result
+        end
       }
+      nil
+    else
+      if (d = digits.find { |d| compute_z(digit: d, z: z, index: index) == 0 })
+        [*model_number, d].join('')
+      end
     end
   end
 
-  def valid?(input)
-    w = 0
-    x = 0
-    y = 0
-    z = 0
+  # a is what we divide z by
+  # b is what we add to x
+  # c is what we add to w
+  def compute_z(digit:, z:, index:)
+    if index == 13
+      @tested += 1
 
-    w = input.shift
-    x = z % 26 + 11
-    x = x == w ? 0 : 1
-    y = 25 * x + 1
-    z = z * y
-    y = (w + 14) * x
-    z = z + y
+      if @tested % 1000 == 0
+        puts "tested: #{@tested}"
+      end
+    end
 
-    w = input.shift
-    x = z % 26 + 13
-    x = x == w ? 0 : 1
-    y = 25 * x + 1
-    z = z * y
-    y = (w + 8) * x
-    z = z + y
+    a = PARAMS[index][:a]
+    b = PARAMS[index][:b]
+    c = PARAMS[index][:c]
 
-    w = input.shift
-    x = z % 26 + 11
-    x = x == w ? 0 : 1
-    y = 25 * x + 1
-    z = z * y
-    y = (w + 4) * x
-    z = z + y
-
-    w = input.shift
-    x = z % 26 + 10
-    x = x == w ? 0 : 1
-    y = 25 * x + 1
-    z = z * y
-    y = (w + 10) * x
-    z = z + y
-
-    w = input.shift
-    x = -3 == w ? 0 : 1
-    y = 25 * x + 1
-    z = z * y
-    y = (w + 14) * x
-    z = z + y
-
-    w = input.shift
-    x = -4 == w ? 0 : 1
-    y = 25 * x + 1
-    z = z * y
-    y = (w + 10) * x
-    z = z + y
-
-    w = input.shift
-    x = z % 26 + 12
-    x = x == w ? 0 : 1
-    y = 25 * x + 1
-    z = z * y
-    y = (w + 4) * x
-    z = z + y
-
-    w = input.shift
-    x = -8 == w ? 0 : 1
-    y = 25 * x + 1
-    z = z * y
-    y = (w + 14) * x
-    z = z + y
-
-    w = input.shift
-    x = -3 == w ? 0 : 1
-    y = 25 * x + 1
-    z = z * y
-    y = (w + 1) * x
-    z = z + y
-
-    w = input.shift
-    x = -12 == w ? 0 : 1
-    y = 25 * x + 1
-    z = z * y
-    y = (w + 6) * x
-    z = z + y
-
-    w = input.shift
-    x = (z % 26) + 14
-    x = x == w ? 0 : 1
-    y = 25 * x + 1
-    z = z * y
-    y = (w + 0) * x
-    z = z + y
-
-    w = input.shift
-    x = -6 == w ? 0 : 1
-    y = 25 * x + 1
-    z = z * y
-    y = (w + 9) * x
-    z = z + y
-
-    w = input.shift
-    x = z % 26 + 11
-    x = x == w ? 0 : 1
-    y = 25 * x + 1
-    z = z * y
-    y = (w + 13) * x
-    z = z + y
-
-    w = input.shift
-    x = -12 == w ? 0 : 1
-    y = 25 * x + 1
-    z = z * y
-    y = (w + 12) * x
-    z = z + y
-
-    z == 0
+    if z % 26 + b == digit
+      z / a
+    else
+      z / a * 26 + digit + c
+    end
   end
 end
